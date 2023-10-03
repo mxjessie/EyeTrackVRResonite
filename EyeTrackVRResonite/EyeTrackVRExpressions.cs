@@ -2,8 +2,7 @@ namespace EyeTrackVR
 {
     public static class ETVRExpressions
     {
-        public static string[] EyeDataWithAddress = new string[]
-        {
+        public static readonly string[] EyeDataWithAddress = {
 
             "/avatar/parameters/LeftEyeX",
             "/avatar/parameters/RightEyeX",

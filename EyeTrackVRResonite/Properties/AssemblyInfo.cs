@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("NeosWCFace-Integration")]
-[assembly: AssemblyDescription("A WCFace Integration for NeosVR. Provides robust eye and face tracking using an RGB webcamera")]
+[assembly: AssemblyTitle("EyeTrackVRResonite")]
+[assembly: AssemblyDescription("A EyeTrackVR integration for Resonite.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Hiatus Labs")]
-[assembly: AssemblyProduct("NeosWCFace-Integration")]
-[assembly: AssemblyCopyright("Copyright ©  2021")]
+[assembly: AssemblyCompany("Meister1593 Labs + Hiatus Labs (og)")]
+[assembly: AssemblyProduct("EyeTrackVRResonite")]
+[assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("0322B2EF-7452-479D-BAE2-FCAB75033337")]
+[assembly: Guid("f6ad1524-11dd-4908-8aae-264488b65de6")]
 
 // Version information for an assembly consists of the following four values:
 //
