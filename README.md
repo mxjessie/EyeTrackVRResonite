@@ -1,6 +1,6 @@
 # EyeTrackVRResonite
 
-A [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader) mod for [Resonite](https://resonite.com/) that enables the use of [Babble Face Tracking](https://github.com/SummerSigh/ProjectBabble).
+A [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader) mod for [Resonite](https://resonite.com/) that enables the use of [EyeTrackVR](https://github.com/EyeTrackVR/EyeTrackVR).
 
 ## Usage
 1. Install [ResoniteModLoader](https://github.com/resonite-modding-group/ResoniteModLoader).
