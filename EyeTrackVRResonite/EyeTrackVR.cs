@@ -39,13 +39,13 @@ namespace EyeTrackVRResonite
         [HarmonyPatch(new[] { typeof(Engine) })]
         public class InputInterfaceCtorPatch
         {
-            public static void Postfix(InputInterface instance)
+            public static void Postfix(InputInterface __instance)
             {
                 try
                 {
                     _etvr = new ETVROSC(_config.GetValue(OscPort));
                     var gen = new EyeTrackVRInterface();
-                    instance.RegisterInputDriver(gen);
+                    __instance.RegisterInputDriver(gen);
                 }
                 catch (Exception e)
                 {
