@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading.Tasks;
 using Elements.Core;
 using EyeTrackVR;
 using OscCore;
+using OscCore.LowLevel;
 
 namespace EyeTrackVRResonite
 {
@@ -46,18 +49,60 @@ namespace EyeTrackVRResonite
             while (_oscSocketState)
             {
                 var result = await _receiver.ReceiveAsync();
-                var message = OscMessage.Read(result.Buffer, 0, result.Buffer.Length);
-                if (!EyeDataWithAddress.ContainsKey(message.Address))
+                var bytes = new System.ArraySegment<byte>(result.Buffer, 0, result.Buffer.Length);
+                if (IsBundle(bytes))
                 {
-                    continue;
+                    var bundle = new OscBundleRaw(bytes);
+                    foreach (var message in bundle)
+                        ProcessOscMessage(message);
                 }
-
-                if (float.TryParse(message[0].ToString(), out var candidate))
+                else
                 {
-                    EyeDataWithAddress[message.Address] = candidate;
+                    var message = new OscMessageRaw(bytes);
+                    ProcessOscMessage(message);
                 }
             }
         }
+
+        private static void ProcessOscMessage(OscMessageRaw message)
+        {
+            if (!EyeDataWithAddress.ContainsKey(message.Address))
+                return;
+
+            var arg = message[0];
+
+            switch (arg.Type)
+            {
+                case (OscToken.Float):
+                    EyeDataWithAddress[message.Address] = message.ReadFloat(ref arg);
+                    break;
+                case (OscToken.Int):
+                    EyeDataWithAddress[message.Address] = message.ReadInt(ref arg);
+                    break;
+                default:
+                    Console.WriteLine($"Unknown OSC type: {arg.Type}");
+                    break;
+            }
+        }
+
+        private static readonly byte[] BundlePrefix = Encoding.ASCII.GetBytes("#bundle");
+        private static bool IsBundle(System.ArraySegment<byte> bytes)
+        {
+            var prefix = BundlePrefix;
+            if (bytes.Count < prefix.Length)
+                return false;
+
+            var i = 0;
+            foreach (var b in bytes)
+            {
+                if (i < prefix.Length && b != prefix[i++])
+                    return false;
+                if (i == prefix.Length)
+                    break;
+            }
+            return true;
+        }
+
 
         public static void Teardown()
         {
