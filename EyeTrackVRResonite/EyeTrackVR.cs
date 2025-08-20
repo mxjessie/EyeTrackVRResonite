@@ -1,7 +1,6 @@
 ﻿using System;
 using Elements.Core;
 using FrooxEngine;
-using HarmonyLib;
 using ResoniteModLoader;
 
 namespace EyeTrackVRResonite
@@ -9,15 +8,30 @@ namespace EyeTrackVRResonite
     public class EyeTrackVR : ResoniteMod
     {
         public override string Name => "EyeTrackVRResonite";
-        public override string Author => "PLYSHKA + dfgHiatus";
-        public override string Version => "2.0.0";
-        public override string Link => "https://github.com/Meister1593/EyeTrackVRResonite";
+        public override string Author => "qualia + Wolf-Seisenbacher + Meister1593 + PLYSHKA + dfgHiatus";
+        public override string Version => "2.2.0";
+        public override string Link => "https://github.com/mxjessie/EyeTrackVRResonite";
 
         public override void OnEngineInit()
         {
             _config = GetConfiguration();
-            new Harmony("net.plyshka.EyeTrackVRResonite").PatchAll();
-            Engine.Current.OnShutdown += ETVROSC.Teardown;
+            Engine.Current.OnShutdown += () => ETVROSC.Teardown();
+
+            Engine.Current.RunPostInit(() =>
+            {
+                try
+                {
+                    _etvr = new ETVROSC(_config.GetValue(OscPort));
+                    var gen = new EyeTrackVRInterface();
+                    Engine.Current.InputInterface.RegisterInputDriver(gen);
+                }
+                catch (Exception e)
+                {
+                    Warn("Module failed to initialize.");
+                    Warn(e.ToString());
+                }
+            });
+
         }
 
         private static ETVROSC _etvr;
@@ -38,25 +52,6 @@ namespace EyeTrackVRResonite
         [AutoRegisterConfigKey]
         private static readonly ModConfigurationKey<int> OscPort = new("osc_port", "EyeTrackVR OSC port", () => 9000);
 
-        [HarmonyPatch(typeof(InputInterface), MethodType.Constructor)]
-        [HarmonyPatch(new[] { typeof(Engine) })]
-        public class InputInterfaceCtorPatch
-        {
-            public static void Postfix(InputInterface __instance)
-            {
-                try
-                {
-                    _etvr = new ETVROSC(_config.GetValue(OscPort));
-                    var gen = new EyeTrackVRInterface();
-                    __instance.RegisterInputDriver(gen);
-                }
-                catch (Exception e)
-                {
-                    Warn("Module failed to initialize.");
-                    Warn(e.ToString());
-                }
-            }
-        }
 
         private class EyeTrackVRInterface : IInputDriver
         {
